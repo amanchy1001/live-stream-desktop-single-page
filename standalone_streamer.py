@@ -129,7 +129,15 @@ class StreamProcess:
             f"{RTMP_SERVER_URL.rstrip('/')}/{self.camera.id}"
         ]
         logger.info(f"Starting FFmpeg for {self.camera.name}: {' '.join(cmd)}")
-        self.process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        creationflags = 0
+        if os.name == 'nt':
+            creationflags = subprocess.CREATE_NO_WINDOW
+        self.process = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            creationflags=creationflags
+        )
         self.last_start_time = time.time()
 
     def is_running(self):
